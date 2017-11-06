@@ -1,0 +1,12 @@
+{
+  "dev": {
+    "api_handler_name": "dog-tracker-dev",
+    "api_handler_arn": "arn:aws:lambda:us-west-2:586424703551:function:dog-tracker-dev",
+    "lambda_functions": {},
+    "backend": "api",
+    "chalice_version": "1.0.4",
+    "rest_api_id": "gncensbrwd",
+    "api_gateway_stage": "api",
+    "region": "us-west-2"
+  }
+}
