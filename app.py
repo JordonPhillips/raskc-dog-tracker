@@ -3,11 +3,11 @@ import base64
 
 from chalice import Chalice, Cron
 from chalicelib.cache import Cache
+from chalicelib.store import DogDB
 from sodapy import Socrata
 from twilio.rest import Client as TwilioClient
 import boto3
 
-ANIMAL_DATASET = 'yaai-7frk'
 ENDPOINT = 'data.kingcounty.gov'
 
 app = Chalice(app_name='dog-tracker')
@@ -38,6 +38,16 @@ def color_count():
 @app.route('/text')
 def text_stats():
     _text_stats(_decrypt_env("DEST_PHONE_NUMBER"))
+
+
+# I wanted to do every hour within range of business hours, but that would
+# have required multiple crons, which isn't something you can do for a single
+# function unfortunately. Splitting it up into multiple functions would also
+# have sucked because then I would be creating a new lambda function for it.
+# At the end of the day, it's not that much extra data.
+@app.schedule(Cron(0, '*', '*', '*', '?', '*'))
+def snapshot(event):
+    get_dog_db().snapshot_current()
 
 
 # This is in GMT, so 12:30pm -> 4:30am... excpet when daylight savings is doing
@@ -86,10 +96,13 @@ def _decrypt_env(key):
     return kms.decrypt(CiphertextBlob=blob)['Plaintext'].decode('utf-8')
 
 
+@cache.cache
+def get_dog_db():
+    return DogDB(get_socrata_client(), os.environ['DOGDB_TABLE_NAME'])
+
+
 def get_adoptable_dogs():
-    return get_socrata_client().get(
-        ANIMAL_DATASET, record_type='ADOPTABLE', animal_type='Dog'
-    )
+    return get_dog_db().get_current()
 
 
 def categorize_dogs(dogs):

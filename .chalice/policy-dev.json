@@ -16,6 +16,13 @@
         "kms:Decrypt"
       ],
       "Resource": "arn:aws:kms:us-west-2:599719170770:key/c2e2e723-8226-4f4d-94f5-309ae8cb145c"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:PutItem"
+      ],
+      "Resource": "arn:aws:dynamodb:us-west-2:599719170770:table/dog-db"
     }
   ]
 }
