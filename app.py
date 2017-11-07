@@ -95,9 +95,7 @@ def categorize_dogs(dogs):
 
 
 def categorize_dog(dog):
-    description = dog.get('memo')
-    if description is None:
-        return
+    description = dog.get('memo', '')
     colors = ['RED', 'GREEN', 'BLUE']
     for color in colors:
         if color in description:
