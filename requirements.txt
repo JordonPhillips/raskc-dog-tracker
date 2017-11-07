@@ -2,3 +2,4 @@ sodapy==1.4.5
 boto3==1.4.7
 botocore==1.7.39
 future==0.16.0
+twilio==6.8.3
