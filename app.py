@@ -1,7 +1,7 @@
 import os
 import base64
 
-from chalice import Chalice
+from chalice import Chalice, Cron
 from chalicelib.cache import Cache
 from sodapy import Socrata
 from twilio.rest import Client as TwilioClient
@@ -38,6 +38,14 @@ def color_count():
 @app.route('/text')
 def text_stats():
     _text_stats(_decrypt_env("DEST_PHONE_NUMBER"))
+
+
+# This is in GMT, so 12:30pm -> 4:30am... excpet when daylight savings is doing
+# its horrible thing, in which case 12:30pm -> 5:30am. Thankfully I don't wake
+# up to the sound of my phone going off.
+@app.schedule(Cron(30, 12, '?', '*', 'SAT', '*'))
+def remind_me(event):
+    text_stats()
 
 
 def _text_stats(dest_number):
