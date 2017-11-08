@@ -20,9 +20,9 @@
     {
       "Effect": "Allow",
       "Action": [
-        "dynamodb:PutItem"
+        "s3:PutObject"
       ],
-      "Resource": "arn:aws:dynamodb:us-west-2:599719170770:table/dog-db"
+      "Resource": "arn:aws:s3:::dog-db/*"
     }
   ]
 }

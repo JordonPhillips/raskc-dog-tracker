@@ -40,6 +40,11 @@ def text_stats():
     _text_stats(_decrypt_env("DEST_PHONE_NUMBER"))
 
 
+@app.route('/snapshot')
+def on_demand_snapshot():
+    get_dog_db().snapshot_current()
+
+
 # I wanted to do every hour within range of business hours, but that would
 # have required multiple crons, which isn't something you can do for a single
 # function unfortunately. Splitting it up into multiple functions would also
@@ -48,7 +53,6 @@ def text_stats():
 @app.schedule(Cron(0, '*', '*', '*', '?', '*'))
 def snapshot(event):
     get_dog_db().snapshot_current()
-
 
 # This is in GMT, so 12:30pm -> 4:30am... excpet when daylight savings is doing
 # its horrible thing, in which case 12:30pm -> 5:30am. Thankfully I don't wake
@@ -98,7 +102,7 @@ def _decrypt_env(key):
 
 @cache.cache
 def get_dog_db():
-    return DogDB(get_socrata_client(), os.environ['DOGDB_TABLE_NAME'])
+    return DogDB(get_socrata_client(), os.environ['DOGDB_BUCKET_NAME'])
 
 
 def get_adoptable_dogs():

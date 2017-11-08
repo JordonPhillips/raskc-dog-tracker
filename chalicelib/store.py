@@ -1,23 +1,27 @@
 import datetime
+import json
 
 import boto3
 
 ANIMAL_DATASET = 'yaai-7frk'
+SNASHOT_PREFIX = 'hourly-snapshots/'
 
 
 class DogDB(object):
-    def __init__(self, socrata_client, table_name):
+    def __init__(self, socrata_client, bucket_name):
         self._socrata_client = socrata_client
-        self._ddb = boto3.resource('dynamodb')
-        self._table = self._ddb.Table(table_name)
+        self._s3 = boto3.client('s3')
+        self._bucket_name = bucket_name
 
     def snapshot_current(self):
         """Takes a snapshot of what the current data is."""
         timestamp = datetime.datetime.utcnow().isoformat()
-        # Is this schema stupid? You bet. But I need to account for
-        # changes and this is the easy way to do that.
-        dog_info = self.get_current()
-        self._table.put_item(Item={'timestamp': timestamp, 'data': dog_info})
+        dog_info = json.dumps(self.get_current(), indent=2) + '\n'
+        key = "%s%s.json" % (SNASHOT_PREFIX, timestamp)
+        self._s3.put_object(
+            Bucket=self._bucket_name, Key=key, Body=dog_info,
+            ContentType='application/json'
+        )
 
     def get_current(self):
         return self._socrata_client.get(
