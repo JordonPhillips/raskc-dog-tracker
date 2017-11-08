@@ -1,20 +1,20 @@
 {
-  "dev": {
-    "api_handler_name": "dog-tracker-dev",
-    "api_handler_arn": "arn:aws:lambda:us-west-2:599719170770:function:dog-tracker-dev",
+  "prod": {
+    "api_handler_name": "dog-tracker-prod",
+    "api_handler_arn": "arn:aws:lambda:us-west-2:599719170770:function:dog-tracker-prod",
     "lambda_functions": {
-      "dog-tracker-dev-snapshot": {
-        "arn": "arn:aws:lambda:us-west-2:599719170770:function:dog-tracker-dev-snapshot",
+      "dog-tracker-prod-snapshot": {
+        "arn": "arn:aws:lambda:us-west-2:599719170770:function:dog-tracker-prod-snapshot",
         "type": "scheduled_event"
       },
-      "dog-tracker-dev-remind_me": {
-        "arn": "arn:aws:lambda:us-west-2:599719170770:function:dog-tracker-dev-remind_me",
+      "dog-tracker-prod-remind_me": {
+        "arn": "arn:aws:lambda:us-west-2:599719170770:function:dog-tracker-prod-remind_me",
         "type": "scheduled_event"
       }
     },
     "backend": "api",
     "chalice_version": "1.0.4",
-    "rest_api_id": "g2wggdq4c9",
+    "rest_api_id": "ky0z9yjaf4",
     "api_gateway_stage": "api",
     "region": "us-west-2"
   }
